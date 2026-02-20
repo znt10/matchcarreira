@@ -32,8 +32,8 @@ export default function EmpresaCadastro() {
     }
 
     return (
-        <section id="signup-form" className="bg-white font-poppins">
-            <Bar />
+        <section id="signup-form" className="bg-white font-poppins py-12">
+
 
             <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JobConnect",
+  title: "MatchCarreira",
   description: "Plataforma que conecta candidatos e empresas",
 };
 
@@ -33,7 +33,9 @@ export default function RootLayout({
         {/* 2. Envolva tudo que precisa de acesso ao login (Bar e children) */}
         <AuthProvider>
             <Bar />
-            <main className="flex-1">{children}</main>
+            <main className="min-h-screen">
+              {children}
+            </main>
             <Rodape />
         </AuthProvider>
       </body>

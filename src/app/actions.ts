@@ -10,8 +10,11 @@ import { authOptions } from "@/lib/auth";
 import Candidato from "@/models/Candidato";
 import Empresa from "@/models/Empresa";
 import Vaga from "@/models/Vaga";
+import Salvo from "@/models/Favorito";
 import { redirect } from "next/navigation";
 import crypto from "crypto";
+import Favorito from "@/models/Favorito";
+
 
 
 
@@ -258,4 +261,36 @@ export async function solicitarRecuperacao(formData: FormData) {
   console.log("========================================");
 
   return { success: true, message: "Link gerado! Verifique o terminal do VS Code." };
+}
+
+
+// AÇÕES DE VAGAS SALVAS PELO USUÁRIO
+export async function salvarVaga(vagaId: string) {
+  await dbConnect()
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error("Usuário não autenticado")
+  }
+  const userId = session.user.id
+  const jaExiste = await Favorito.findOne({ userId, vagaId })
+
+  if (jaExiste) {
+    return
+  }
+  await Favorito.create({ userId, vagaId })
+}
+
+// AÇÕES DE VAGAS REMOVER PELO USUÁRIO
+export async function removerVagaSalva(vagaId: string) {
+  await dbConnect()
+
+  const session = await getServerSession(authOptions)
+
+  if (!session?.user?.id) {
+    throw new Error("Usuário não autenticado")
+  }
+
+  const userId = session.user.id
+
+  await Favorito.findOneAndDelete({ userId, vagaId })
 }

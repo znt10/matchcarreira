@@ -3,15 +3,18 @@
 import { useEffect, useState } from "react";
 import { listarvagas } from "@/app/actions";
 import BtnDeletar from "@/components/BtnDeletar";
-import BtnEditar from "@/components/BtnEditar"; // Supondo que você tenha esse import
+import BtnEditar from "@/components/BtnEditar";
+import { salvarVaga } from "@/app/actions";
+// Importando os ícones para os botões de baixo
+import { X, Heart, Check } from "lucide-react";
 
 interface VerVagasProps {
     tipo: string;
-    userId: string | null | undefined; // Nova prop para receber o ID
+    userId: string | null | undefined;
 }
 
 export default function VerVagas({ tipo, userId }: VerVagasProps) {
-    const [vagas, setVagas] = useState([]);
+    const [vagas, setVagas] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -40,30 +43,25 @@ export default function VerVagas({ tipo, userId }: VerVagasProps) {
     }
 
     return (
-        <>
-            <section className="px-6 max-w-7xl mx-auto pb-10 pt-8">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-                    <h1 className="text-4xl font-extrabold text-gray-900 mb-4 md:mb-0">
-                        Vagas Disponíveis
-                    </h1>
+        <section className="px-6 max-w-7xl mx-auto pb-10 pt-30 bg-gray-100 min-h-screen">
+            <div className="text-center mb-10">
+                <h1 className="text-4xl font-bold text-gray-900 mb-2">Vagas disponíveis</h1>
+                <p className="text-gray-600">Não tem cadastro? <span className="text-blue-600 cursor-pointer">Cadastre-se</span></p>
+            </div>
+
+            {vagas.length === 0 ? (
+                <div className="text-center text-gray-600 text-lg py-10 bg-white rounded-lg shadow-sm">
+                    Nenhuma vaga disponível no momento.
                 </div>
+            ) : (
+                <div className="flex flex-col gap-12 items-center">
+                    {vagas.map((vaga, index) => {
+                        const isDonoDaVaga = isEmpresa && userId === vaga.empresaId;
 
-                {vagas.length === 0 ? (
-                    <div className="text-center text-gray-600 text-lg py-10 bg-gray-100 rounded-lg shadow-sm">
-                        Nenhuma vaga disponível no momento.
-                    </div>
-                ) : (
-                    <div className="flex flex-col gap-8">
-                        {vagas.map((vaga: any, index) => {
-                            // Verifica se o usuário logado é o dono da vaga
-                            const isDonoDaVaga = isEmpresa && userId === vaga.empresaId;
-
-                            return (
-                                <article
-                                    key={vaga._id || index}
-                                    className="relative p-6 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 w-full"
-                                >
-                                    {/* Botões de Ação (Só aparecem se for Empresa E for o Dono) */}
+                        return (
+                            <div key={vaga._id || index} className="w-full max-w-4xl">
+                                {/* CARD DA VAGA */}
+                                <article className="relative p-10 bg-white border border-gray-200 rounded-[2rem] shadow-sm w-full">
                                     {isDonoDaVaga && (
                                         <div className="absolute top-4 right-4 flex gap-2">
                                             <BtnEditar vagaId={vaga._id} />
@@ -71,44 +69,50 @@ export default function VerVagas({ tipo, userId }: VerVagasProps) {
                                         </div>
                                     )}
 
-                                    {/* Restante do card... */}
-                                    <div className="mb-4 pr-10">
-                                        <h2 className="text-2xl font-semibold text-gray-900 break-words">
-                                            {vaga.titulo}
-                                        </h2>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            {/* Se vaga.empresa_nome não existir, mostra o texto padrão */}
-                                            {vaga.empresa_nome || "Empresa Confidencial"}
-                                        </p>
+                                    <div className="space-y-4 text-gray-800">
+                                        <p><strong className="text-black text-lg">Empresa:</strong><br /> {vaga.empresa_nome || "NeuralSoft Tecnologia Ltda."}</p>
+                                        <p><strong className="text-black text-lg">Vaga:</strong><br /> {vaga.titulo}</p>
+                                        <p><strong className="text-black text-lg">Descrição:</strong><br /> {vaga.descricao}</p>
+                                        <p><strong className="text-black text-lg">Requisitos:</strong><br /> {vaga.requisitos}</p>
+                                        <p><strong className="text-black text-lg">Salário:</strong><br /> R$ {vaga.salario} + benefícios</p>
                                     </div>
-
-                                    <p className="text-gray-700 text-sm mb-3 line-clamp-3">
-                                        {vaga.descricao || "Sem descrição disponível."}
-                                    </p>
-
-                                    <div className="text-gray-600 text-sm space-y-1 mb-4">
-                                        <p>
-                                            <strong className="text-gray-800">Requisitos:</strong>{" "}
-                                            {vaga.requisitos || "Não especificado"}
-                                        </p>
-                                        <br />
-                                        <p>
-                                            <strong className="text-gray-800">Salário:</strong>{" "}
-                                            {vaga.salario ? `R$ ${vaga.salario}` : "A combinar"}
-                                        </p>
-                                    </div>
-
-                                    {!isEmpresa && (
-                                        <button className="w-40 bg-gray-700 text-white font-bold text-xs py-2 rounded-md hover:bg-gray-800 transition-colors">
-                                            Me candidatar
-                                        </button>
-                                    )}
                                 </article>
-                            );
-                        })}
-                    </div>
-                )}
-            </section>
-        </>
+
+                                {/* AS "BOLAS" DE AÇÃO (SÓ APARECEM PARA CANDIDATOS) */}
+                                {!isEmpresa && (
+                                    <div className="flex justify-center items-center gap-10 mt-8">
+                                        {/* Botão Passar (X) */}
+                                        <button className="w-20 h-20 bg-[#d64541] hover:bg-[#b93a37] text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110">
+                                            <X size={45} strokeWidth={2.5} />
+                                        </button>
+
+                                        {/* Botão Salvar (Coração) */}
+                                        <button
+                                            onClick={async () => {
+                                                if (!userId) {
+                                                alert("Você precisa estar logado para salvar vagas.")
+                                                return
+                                                }
+
+                                                await salvarVaga(vaga._id)
+                                            }}
+                                            className="w-20 h-20 bg-[#6b9dff] hover:bg-[#5a8be6] text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110"
+                                            >
+                                            <Heart size={40} fill="white" />
+                                            </button>
+                                                                                    
+
+                                        {/* Botão Candidatar (Check) */}
+                                        <button className="w-24 h-24 bg-[#32ad1d] hover:bg-[#2a9318] text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110">
+                                            <Check size={55} strokeWidth={3} />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </section>
     );
 }

@@ -25,7 +25,6 @@ export default function VagasCadastro() {
 
     return (
         <section id="section-form-page" className="bg-white font-poppins">
-            <Bar/>
             <div className="min-h-screen flex items-stretch">
                 <div className="w-full grid grid-cols-1 lg:grid-cols-2">
 
