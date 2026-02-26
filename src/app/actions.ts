@@ -293,4 +293,73 @@ export async function removerVagaSalva(vagaId: string) {
   const userId = session.user.id
 
   await Favorito.findOneAndDelete({ userId, vagaId })
+  return { success: true , message: "Vaga removida dos favoritos com sucesso!"}
+}
+
+
+// AÇÃO DE LISTAR VAGAS SALVAS PELO USUÁRIO
+export async function listarVagasSalvas() {
+  await dbConnect()
+  const session = await getServerSession(authOptions)
+
+  if (!session?.user?.id) {
+    throw new Error("Usuário não autenticado")
+  }
+  const userId = session.user.id
+
+  const favoritos = await Favorito.find({ userId }).populate("vagaId").lean() 
+  return JSON.parse(JSON.stringify(favoritos.map(fav => fav.vagaId)))
+}
+
+
+
+// AÇÃO DE VER SE USUÁRIO SALVOU A VAGA
+export async function verificarVagaSalva(vagaId: string) {
+  await dbConnect()
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error("Usuário não autenticado")
+  }
+  const userId = session.user.id
+  const favorito = await Favorito.findOne({ userId, vagaId })
+  return !!favorito
+}
+
+// AÇÃO DE CONTAR QUANTAS VEZES A VAGA FOI SALVA
+export async function contarVagasSalvas(vagaId: string) {
+  await dbConnect()
+  const count = await Favorito.countDocuments({ vagaId })
+  return count
+}
+
+// AÇÃO candidados se candidatar a vaga
+export async function candidatarVaga(vagaId: string) {
+  await dbConnect()
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error("Usuário não autenticado")
+  }
+  const userId = session.user.id
+
+  const vaga = await Vaga.findById(vagaId)
+  if (!vaga) {
+    throw new Error("Vaga não encontrada")
+  }
+  if (vaga.candidatos?.includes(userId)) {
+    return { message: "Você já se candidatou a esta vaga." }
+  }
+  vaga.candidatos = vaga.candidatos ? [...vaga.candidatos, userId] : [userId]
+  await vaga.save()
+  return { message: "Candidatura realizada com sucesso!" }
+}
+
+
+// AÇÃO DE CONTAR QUANTOS CANDIDATOS SE CANDIDATARAM A VAGA
+export async function contarCandidatosVaga(vagaId: string) {
+  await dbConnect()
+  const vaga = await Vaga.findById(vagaId)
+  if (!vaga) {
+    throw new Error("Vaga não encontrada")
+  }
+  return vaga.candidatos ? vaga.candidatos.length : 0
 }

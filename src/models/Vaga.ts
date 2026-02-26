@@ -7,6 +7,7 @@ export interface IVaga extends Document {
     salario: number;
     empresaId: mongoose.Types.ObjectId;
     empresa_nome: string;
+    candidatos?: mongoose.Types.ObjectId[]; 
     }
 
     const VagaSchema = new Schema<IVaga>(
@@ -17,6 +18,7 @@ export interface IVaga extends Document {
         salario: { type: Number, required: true },
         empresaId: { type: Schema.Types.ObjectId, ref: "Empresa", required: true },
         empresa_nome: { type: String, required: false },
+        candidatos: [{ type: Schema.Types.ObjectId, required: false, ref: "Candidato" }],
     },
     { timestamps: true }
     );
