@@ -19,7 +19,7 @@ function DropdownMenuCustom() {
     return (
         <Dropdown placement="bottom-end">
             <DropdownTrigger>
-                <button className="text-white px-2 py-1 hover:text-yellow-300 transition-colors flex items-center gap-2 cursor-pointer outline-none">
+                <button className="bg-blue-400 hover:bg-blue-500 text-gray-900 px-5 py-2 rounded-full font-bold transition shadow-md">
                     {/* Muda o texto do botão dependendo se está logado */}
                     {isLoggedIn ? `Olá, ${session?.user?.name?.split(' ')[0]}` : "Entrar / Menu"}
                 </button>
@@ -65,8 +65,8 @@ function DropdownMenuCustom() {
 
             {/* --- CASO 3: LOGADO COMO USUÁRIO COMUM --- */}
             {isLoggedIn && !isAdmin ? (
-                <DropdownItem key="meus-dados" onClick={() => router.push("/meus-dados")}>
-                    Meus Dados
+                <DropdownItem key="salvo" onClick={() => router.push("/salvados")}>
+                        Salvados
                 </DropdownItem>
             ) : null}
 

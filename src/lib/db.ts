@@ -4,7 +4,7 @@ const MONGODB_URI = process .env.MONGODB_URI !;
 
 
 
-if (!MONGODB_URI ) throw new Error("Defina MONGODB_URI no .env.local" );
+if (!MONGODB_URI ) throw new Error("Defina MONGODB_URI no .env" );
   let cached = (global as any).mongoose ;
 
 
@@ -12,7 +12,6 @@ if (!MONGODB_URI ) throw new Error("Defina MONGODB_URI no .env.local" );
 if (!cached) {
   cached = (global as any).mongoose = { conn: null, promise: null };
 }
-
 
 
 
