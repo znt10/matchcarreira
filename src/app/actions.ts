@@ -227,6 +227,7 @@ export async function redifinirSenha(token: string, formData: FormData) {
   await user.save();
   
   redirect('/login?message=senha-resetada');
+  return { success: "senha resetada com sucesso" };
 }
 
 export async function solicitarRecuperacao(formData: FormData) {
@@ -260,7 +261,8 @@ export async function solicitarRecuperacao(formData: FormData) {
   console.log(link);
   console.log("========================================");
 
-  return { success: true, message: "Link gerado! Verifique o terminal do VS Code." };
+  redirect(`/reset-password/${token}`);
+  return { success: true, message: "Link de recuperação gerado (veja no console)." };
 }
 
 

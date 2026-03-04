@@ -4,9 +4,10 @@ import mongoose, { Schema, models, model, Document } from "mongoose";
 // 1. Defina a Interface (Tipagem)
 export interface IUser extends Document {
   email: string;
-  password?: string; // Opcional pq no select: false ele pode não vir
+  password?: string;
   name: string;
   role: "candidato" | "empresa";
+
 
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;

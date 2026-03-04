@@ -8,7 +8,9 @@ import Image from "next/image";
 export default function CandidatoCadastro() {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+   
 
+    
     async function handleSubmit(formData: FormData) {
         setLoading(true);
         setErrorMessage("");

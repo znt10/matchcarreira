@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { registerUser } from "@/app/actions"; 
 import { useRouter } from "next/navigation";
-import Bar from "@/components/NavBar/Search_bar";
 import Link from "next/link";
 
 export default function EmpresaCadastro() {
@@ -15,7 +14,7 @@ export default function EmpresaCadastro() {
     async function handleSubmit(formData: FormData) {
         setLoading(true);
     
-        formData.set("role", "empresa"); // <-- ESSENCIAL
+        formData.set("role", "empresa"); 
         formData.set("area_atuacao", formData.get("field-of-work") || "");
 
         const result = await registerUser(formData);

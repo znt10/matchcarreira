@@ -131,7 +131,7 @@ export default function LoginPage() {
             </div>
             
             {/* Link para a página de esqueci a senha */}
-            <Link href="#" className="font-medium hover:text-white transition-colors hover:underline">
+            <Link href="/forgot-password" className="font-medium hover:text-white transition-colors hover:underline">
               Esqueceu a senha?
             </Link>
           </div>
