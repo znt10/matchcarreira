@@ -49,7 +49,7 @@ export default function Rodape() {
             </div>
 
             <div className="border-t border-gray-500 mt-8 pt-4 text-center text-sm">
-                <p>© 2025 JobConnect — Desenvolvido por Zeduron | WEB II</p>
+                <p>© 2025 MatchCarreira — Desenvolvido por Zeduron | WEB II</p>
                 <p>Versão da API: v1</p>
             </div>
         </footer>
